@@ -1,57 +1,34 @@
-    function obsidian_link_post_render(data){
-        let reg = /\[\[(.+?)\]\]/g;
-        let obsLinkArr = data.content.match(reg);
-        if(obsLinkArr == null){
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var ObsidianLinkRender = (function () {
+    function ObsidianLinkRender() {
+        this.render = function (data) {
+            var IMGTAGPREFIX = '!';
+            var regexexp = new RegExp("[" + IMGTAGPREFIX + "]*\\[\\[(.+?)\\]\\]", 'g');
+            var obsLinkArr = data.content.match(regexexp);
+            if (obsLinkArr == null) {
+                return data;
+            }
+            for (var i = 0; i < obsLinkArr.length; i++) {
+                var isImgTag = false;
+                if (obsLinkArr[i].startsWith(IMGTAGPREFIX)) {
+                    isImgTag = true;
+                    obsLinkArr[i] = obsLinkArr[i].replace(IMGTAGPREFIX, "");
+                }
+                var link = obsLinkArr[i].match(/([^\[\]]+)/)[0];
+                var postlink = link.match(/([^^#|]*)/) ? link.match(/([^^#|]*)/)[0] : '';
+                var displayText = link.match(/\|([^^#]*)/) ? link.match(/\|([^^#]*)/)[0].substring(1) : '';
+                var anchor = link.match(/#([^^|]*)/) ? link.match(/#([^^|]*)/)[0].substring(1) : '';
+                if (!isImgTag) {
+                    data.content = data.content.replace(obsLinkArr[i], "{% post_link " + postlink + (displayText != "" ? " '" + displayText + "'" : "") + " %}");
+                }
+                else {
+                    data.content = data.content.replace(IMGTAGPREFIX + obsLinkArr[i], "{% asset_img '" + postlink + "' \"" + displayText + "'" + postlink + "'" + "\" %}");
+                }
+            }
             return data;
-        }
-        for(let i=0;i < obsLinkArr.length;i++){
-            let isImgTag = false;
-            if(data.content[data.content.indexOf(obsLinkArr[i])-1]=='!'){
-                isImgTag = true;
-            }
-            let link = obsLinkArr[i].replace("]]", "").replace("[[", "");
-            let titleText = '';
-            if(link.indexOf('#')>-1 || link.indexOf('^')>-1 || link.indexOf('|')>-1){
-                let titleend = link.length-1;
-                let altText = -1;
-                let altTextEnd = titleend;
-                if(link.indexOf('#')>-1){
-                    titleend = link.indexOf('#');
-                    if(link.indexOf('|')>-1){
-                        if(link.indexOf('#')>link.indexOf('|')){
-                            altTextEnd = link.indexOf('#')-1;
-                        }
-                    }
-                }
-                if(link.indexOf('^')>-1 && titleend > link.indexOf('^')){
-                    titleend = link.indexOf('^');
-                    if(link.indexOf('|')>-1){
-                        if(link.indexOf('^')>link.indexOf('|')){
-                            altTextEnd = link.indexOf('^')-1;
-                        }
-                    }
-                }
-                if(link.indexOf('|')>-1 ){
-                    altText = link.indexOf('|')+1;
-
-                    if(titleend > link.indexOf('|')){
-                        titleend =  link.indexOf('|');
-                    }
-                }
-                if(altText>-1){
-                    
-                    titleText = link.substring(altText,altTextEnd+1);
-                }
-                link = link.substring(0,titleend);
-//console.log(link,':',titleText,':',titleend,':', altText,':', altTextEnd)     ;
-}
-            if(!isImgTag){
-            data.content = data.content.replace(obsLinkArr[i], "{% post_link '" + link + "' "+titleText+" %}");
-            }
-            else{
-            data.content = data.content.replace('!'+obsLinkArr[i], "{% asset_img '" + link + "' \"標題-"+titleText+"'"+titleText+"'"+"\" %}");
-            }
-        }
-        return data;
+        };
     }
-    hexo.extend.filter.register('before_post_render', obsidian_link_post_render);
+    return ObsidianLinkRender;
+}());
+hexo.extend.filter.register('before_post_render', new ObsidianLinkRender().render);

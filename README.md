@@ -1,5 +1,8 @@
 # hexo-obsdian-link-plus
 
+# Install
+npm install hexo-obsdian-link-plus
+
 # Usage
 
 ## Post Link

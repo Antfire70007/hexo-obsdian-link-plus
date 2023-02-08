@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "module": "CommonJS",
+      "target": "ES5",
+      "outDir": "./",
+      "noImplicitAny": true,
+      "removeComments": true,
+      "preserveConstEnums": true,
+    //   "outFile": "index.js",
+      "sourceMap": false
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "**/*.spec.ts"]
+  }
