@@ -1,7 +1,7 @@
-# hexo-obsdian-link-plus
+# hexo-obsidian-link-plus
 
 # Install
-npm install hexo-obsdian-link-plus
+npm install hexo-obsidian-link-plus
 
 # Usage
 
