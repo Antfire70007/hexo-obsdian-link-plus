@@ -1,6 +1,6 @@
 {
     "name": "hexo-obsidian-link-plus",
-    "version": "0.0.4",
+    "version": "0.0.6",
     "main": "index",
     "scripts": {
         "build": "tsc "

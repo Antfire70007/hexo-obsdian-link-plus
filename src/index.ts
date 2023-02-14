@@ -1,8 +1,19 @@
 import Hexo = require("hexo");
 import util = require("hexo-util");
+class ObsidianLinkRenderOption{
+     alternate_prefix: string;
+
+}
 class ObsidianLinkRender{
 
         render = function (data:Hexo.Locals.Page){
+
+            var hexo = this;
+            
+            var options =  Object.assign({
+                 alternate_prefix:''
+              }, hexo.config.obsidian_link);
+
             const IMGTAGPREFIX:string = '!';
             const regexexp = new RegExp("["+IMGTAGPREFIX+"]*\\[\\[(.+?)\\]\\]",'g');
             let obsLinkArr = data.content.match(regexexp);
@@ -25,7 +36,7 @@ class ObsidianLinkRender{
                     data.content = data.content.replace(obsLinkArr[i], "{% post_link " + postlink + (displayText != "" ? " '" + displayText + "'" : "") + " %}");
                 }
                 else {
-                    data.content = data.content.replace(IMGTAGPREFIX + obsLinkArr[i], "{% asset_img '" + postlink + "' \"" + displayText + "'" + postlink + "'" + "\" %}");
+                    data.content = data.content.replace(IMGTAGPREFIX + obsLinkArr[i], "{% asset_img '" + postlink + "' \"" + displayText + "'" +options.alternate_prefix+ postlink + "'" + "\" %}");
                 }
             }
             return data;

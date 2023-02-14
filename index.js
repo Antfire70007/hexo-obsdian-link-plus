@@ -1,8 +1,17 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+var ObsidianLinkRenderOption = (function () {
+    function ObsidianLinkRenderOption() {
+    }
+    return ObsidianLinkRenderOption;
+}());
 var ObsidianLinkRender = (function () {
     function ObsidianLinkRender() {
         this.render = function (data) {
+            var hexo = this;
+            var options = Object.assign({
+                alternate_prefix: ''
+            }, hexo.config.obsidian_link);
             var IMGTAGPREFIX = '!';
             var regexexp = new RegExp("[" + IMGTAGPREFIX + "]*\\[\\[(.+?)\\]\\]", 'g');
             var obsLinkArr = data.content.match(regexexp);
@@ -23,7 +32,7 @@ var ObsidianLinkRender = (function () {
                     data.content = data.content.replace(obsLinkArr[i], "{% post_link " + postlink + (displayText != "" ? " '" + displayText + "'" : "") + " %}");
                 }
                 else {
-                    data.content = data.content.replace(IMGTAGPREFIX + obsLinkArr[i], "{% asset_img '" + postlink + "' \"" + displayText + "'" + postlink + "'" + "\" %}");
+                    data.content = data.content.replace(IMGTAGPREFIX + obsLinkArr[i], "{% asset_img '" + postlink + "' \"" + displayText + "'" + options.alternate_prefix + postlink + "'" + "\" %}");
                 }
             }
             return data;
