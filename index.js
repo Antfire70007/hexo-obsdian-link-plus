@@ -10,7 +10,8 @@ var ObsidianLinkRender = (function () {
         this.render = function (data) {
             var hexo = this;
             var options = Object.assign({
-                alternate_prefix: ''
+                alternate_prefix: '',
+                title_prefix: '',
             }, hexo.config.obsidian_link);
             var IMGTAGPREFIX = '!';
             var regexexp = new RegExp("[" + IMGTAGPREFIX + "]*\\[\\[(.+?)\\]\\]", 'g');
@@ -29,10 +30,10 @@ var ObsidianLinkRender = (function () {
                 var displayText = link.match(/\|([^^#]*)/) ? link.match(/\|([^^#]*)/)[0].substring(1) : '';
                 var anchor = link.match(/#([^^|]*)/) ? link.match(/#([^^|]*)/)[0].substring(1) : '';
                 if (!isImgTag) {
-                    data.content = data.content.replace(obsLinkArr[i], "{% post_link " + postlink + (displayText != "" ? " '" + displayText + "'" : "") + " %}");
+                    data.content = data.content.replace(obsLinkArr[i], "{% post_link " + postlink + (displayText != "" ? " '" + options.title_prefix + displayText + "'" : "") + " %}");
                 }
                 else {
-                    data.content = data.content.replace(IMGTAGPREFIX + obsLinkArr[i], "{% asset_img '" + postlink + "' \"" + displayText + "'" + options.alternate_prefix + postlink + "'" + "\" %}");
+                    data.content = data.content.replace(IMGTAGPREFIX + obsLinkArr[i], "{% asset_img '" + postlink + "' \"" + options.title_prefix + displayText + "'" + options.alternate_prefix + postlink + "'" + "\" %}");
                 }
             }
             return data;
